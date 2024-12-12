@@ -1,5 +1,7 @@
 import React, { useState } from 'react'
 import ImageModal from './ImageModal'
+import AudioModal from './AudioModal'
+import FillInTheBlanksModal from './FillTheBlanksModal'
 
 const plantillasEjercicios = [
   { id: 1, nombre: 'Image', descripcion: 'Ejercicios basados en imágenes' },
@@ -10,29 +12,40 @@ const plantillasEjercicios = [
   { id: 6, nombre: 'Article, essay or text', descripcion: 'Ejercicios basados en artículos o textos' },
   { id: 7, nombre: 'Audio', descripcion: 'Ejercicios de comprensión auditiva' },
   { id: 8, nombre: 'Fill in the blanks', descripcion: 'Completar espacios en blanco' },
+  { id: 9, nombre: 'Record Audio', descripcion: 'Grabar audio para ejercicios de pronunciación' },
 ]
 
 export default function CrearEjercicio() {
   const [plantillaSeleccionada, setPlantillaSeleccionada] = useState('')
-  const [modalAbierto, setModalAbierto] = useState(false)
+  const [modalImagenAbierto, setModalImagenAbierto] = useState(false)
+  const [modalAudioAbierto, setModalAudioAbierto] = useState(false)
+  const [modalFillInTheBlanksAbierto, setModalFillInTheBlanksAbierto] = useState(false)
 
-  const abrirModal = () => setModalAbierto(true)
-  const cerrarModal = () => setModalAbierto(false)
+  const abrirModalImagen = () => setModalImagenAbierto(true)
+  const cerrarModalImagen = () => setModalImagenAbierto(false)
+  const abrirModalAudio = () => setModalAudioAbierto(true)
+  const cerrarModalAudio = () => setModalAudioAbierto(false)
+  const abrirModalFillInTheBlanks = () => setModalFillInTheBlanksAbierto(true)
+  const cerrarModalFillInTheBlanks = () => setModalFillInTheBlanksAbierto(false)
 
   const manejarClickPlantilla = (id) => {
     setPlantillaSeleccionada(id.toString())
     if (id === 1) {
-      abrirModal()
+      abrirModalImagen()
+    } else if (id === 7) {
+      abrirModalAudio()
+    } else if (id === 8) {
+      abrirModalFillInTheBlanks()
     }
   }
 
   return (
-    <div className="min-h-screen bg-gray-900 text-gray-100 py-8">
+    <div className="min-h-screen bg-white text-gray-900 py-8">
       <div className="container mx-auto px-4">
-        <h1 className="text-3xl font-bold text-center mb-8 text-[#FEAB5F]">Create New Exercise</h1>
-        
+        <h1 className="text-3xl font-bold text-center mb-8 text-gray-900">Create New Exercise</h1>
+
         <div className="mb-6">
-          <label htmlFor="exercise-template" className="block text-sm font-medium mb-2 text-[#FEAB5F]">
+          <label htmlFor="exercise-template" className="block text-sm font-medium mb-2 text-gray-700">
             Exercise Template
           </label>
           <select
@@ -54,7 +67,7 @@ export default function CrearEjercicio() {
           {plantillasEjercicios.map((plantilla) => (
             <div
               key={plantilla.id}
-              className="bg-gray-100 text-gray-900 p-4 rounded-lg shadow hover:shadow-md transition-shadow duration-300 cursor-pointer border-2 border-transparent hover:border-[#FEAB5F]"
+              className="bg-white text-gray-900 p-4 rounded-lg shadow-md hover:shadow-sm transition-shadow duration-300 cursor-pointer border border-gray-200 hover:border-[#FEAB5F]"
               onClick={() => manejarClickPlantilla(plantilla.id)}
             >
               <h3 className="text-lg font-semibold mb-2 text-[#FEAB5F]">{plantilla.nombre}</h3>
@@ -64,7 +77,9 @@ export default function CrearEjercicio() {
         </div>
       </div>
 
-      <ImageModal isOpen={modalAbierto} onClose={cerrarModal} />
+      <ImageModal isOpen={modalImagenAbierto} onClose={cerrarModalImagen} />
+      <AudioModal isOpen={modalAudioAbierto} onClose={cerrarModalAudio} />
+      <FillInTheBlanksModal isOpen={modalFillInTheBlanksAbierto} onClose={cerrarModalFillInTheBlanks} />
     </div>
   )
 }
