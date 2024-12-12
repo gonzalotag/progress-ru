@@ -12,6 +12,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import HomePage from './components/HomePage';
 import ExerciseTemplate from './components/ExerciseTemplate';
 import VistaEstudiante from './components/VistaEstudiante';
+import PerfilEstudiante from './components/PerfilEstudiante';
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/exercise-template" element={<ExerciseTemplate />} />
         <Route path="/vista-estudiante" element={<VistaEstudiante />} />
+        <Route path="/perfil-estudiante" element={<PerfilEstudiante />} />
       </Routes>
     </BrowserRouter>
   );

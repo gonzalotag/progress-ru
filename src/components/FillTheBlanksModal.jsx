@@ -21,7 +21,6 @@ export default function FillInTheBlanksModal({ isOpen, onClose }) {
   }, [exerciseText])
 
   const handleSave = () => {
-    // Aquí iría la lógica para guardar el ejercicio
     console.log('Guardando:', { task, exerciseText })
     onClose()
   }

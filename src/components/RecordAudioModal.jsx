@@ -30,7 +30,6 @@ const RecordAudioModal = ({ isOpen, onClose }) => {
   };
 
   const handleSave = () => {
-    // Aquí puedes agregar la logica para guardar el audio y los datos en tu servidor o base de datos
     console.log('Guardar:', taskName, description, duration, audioBlob);
     onClose();
   };

@@ -13,7 +13,6 @@ export default function AudioModal({ isOpen, onClose }) {
   }
 
   const handleSave = () => {
-    // Aquí iría la lógica para guardar el audio y la información
     console.log('Guardando:', { task, audioName, audioFile })
     onClose()
   }
