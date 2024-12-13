@@ -11,20 +11,23 @@ export default function FillInTheBlanksModal({ isOpen, onClose }) {
     const parts = exerciseText.split(/(\[.*?\])/);
     setParsedExercise(parts.map((part, index) => {
       if (part.startsWith('[') && part.endsWith(']')) {
-        return <input 
-          key={index}
-          type="text" 
-          className="border-b border-gray-300 focus:border-[#FEAB5F] outline-none px-1 w-20 inline-block"
-          placeholder={part.slice(1, -1)}
-        />;
+        return (
+          <input 
+            key={index}
+            type="text" 
+            className="border-b border-gray-300 focus:border-[#FEAB5F] outline-none px-1 w-20 inline-block"
+            placeholder="Completar" // Placeholder para el input
+          />
+        );
       }
-      return <span key={index}>{part}</span>;
+      return <span key={index}>{part}</span>; // Mostrar el texto normal
     }));
   }, [exerciseText]);
 
   const handleSave = () => {
     if (task && exerciseText) {
-      agregarActividad({ task, exerciseText }); // Agregar la actividad directamente
+      // Guardar solo el texto de la tarea y el texto del ejercicio
+      agregarActividad({ nombre: task, textoEjercicio: exerciseText }); // Agregar la actividad directamente
       onClose(); // Cerrar el modal
     }
   };

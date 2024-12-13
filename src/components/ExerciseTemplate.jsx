@@ -4,13 +4,13 @@ import { ActivityContext } from '../context/ActivityContext'; // Importar el con
 import ImageModal from './ImageModal';
 import AudioModal from './AudioModal';
 import FillInTheBlanksModal from './FillTheBlanksModal';
-// import RecordAudioModal from './RecordAudioModal';
+import RecordAudioModal from './RecordAudioModal';
 
 const plantillasEjercicios = [
   { id: 1, nombre: 'Image', descripcion: 'Ejercicios basados en imágenes' },
   { id: 7, nombre: 'Audio', descripcion: 'Ejercicios de comprensión auditiva' },
   { id: 8, nombre: 'Fill in the blanks', descripcion: 'Completar espacios en blanco' },
-  // { id: 9, nombre: 'Record Audio', descripcion: 'Grabar audio para ejercicios de pronunciación' },
+  { id: 9, nombre: 'Record Audio', descripcion: 'Grabar audio para ejercicios de pronunciación' },
 ];
 
 export default function CrearEjercicio() {

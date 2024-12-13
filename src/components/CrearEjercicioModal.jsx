@@ -100,7 +100,7 @@ const CrearEjercicioModal = ({ isOpen, onClose }) => {
         <ImageModal isOpen={modalImagenAbierto} onClose={cerrarModalImagen} onSave={manejarGuardarActividad} />
         <AudioModal isOpen={modalAudioAbierto} onClose={cerrarModalAudio} />
         <FillInTheBlanksModal isOpen={modalFillInTheBlanksAbierto} onClose={cerrarModalFillInTheBlanks} />
-        <RecordAudioModal isOpen={modalRecordAudioAbierto} onClose={cerrarModalRecordAudio} />
+        {/* <RecordAudioModal isOpen={modalRecordAudioAbierto} onClose={cerrarModalRecordAudio} /> */}
 
         <button
           className="mt-4 bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded"

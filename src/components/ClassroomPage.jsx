@@ -30,10 +30,38 @@ const ClassroomPage = () => {
             {activities.map((actividad, index) => (
               <li key={index} className="bg-white rounded-lg shadow-md p-4">
                 <h3 className="text-lg font-bold mb-2">{actividad.nombre}</h3>
-                {actividad.imagen ? (
+                {actividad.imagen && (
                   <img src={actividad.imagen} alt={actividad.nombre} className="w-full h-auto object-cover rounded-lg" />
-                ) : (
-                  <div className="bg-gray-200 border-2 border-dashed rounded-xl w-full h-48" />
+                )}
+                {actividad.audio && (
+                  <audio controls>
+                    <source src={URL.createObjectURL(actividad.audio)} type="audio/webm" />
+                    Tu navegador no soporta el elemento de audio.
+                  </audio>
+                )}
+                {actividad.textoEjercicio && (
+                  <div>
+                    <p>Completa los espacios en blanco:</p>
+                    {actividad.textoEjercicio.split(/(\[.*?\])/).map((part, index) => {
+                      if (part.startsWith('[') && part.endsWith(']')) {
+                        return (
+                          <input 
+                            key={index}
+                            type="text" 
+                            className="border-b border-gray-300 focus:border-[#FEAB5F] outline-none px-1 w-20 inline-block"
+                            placeholder="Completar" // Placeholder para el input
+                          />
+                        );
+                      }
+                      return <span key={index}>{part}</span>; // Mostrar el texto normal
+                    })}
+                  </div>
+                )}
+                {actividad.descripcion && (
+                  <p>{actividad.descripcion}</p>
+                )}
+                {actividad.duracion && (
+                  <p>Duración: {actividad.duracion} segundos</p>
                 )}
               </li>
             ))}
@@ -52,6 +80,6 @@ const ClassroomPage = () => {
       />
     </div>
   );
-};
+  };
 
 export default ClassroomPage;
