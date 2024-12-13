@@ -1,107 +1,84 @@
-import React, { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import FormularioRegistroEstudiante from './FormularioRegistroEstudiante'
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Trash } from 'lucide-react';
+import FormularioRegistroEstudiante from './FormularioRegistroEstudiante';
 import PerfilEstudiante from './PerfilEstudiante';
 
 export default function VistaEstudiante() {
   const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
-  const [showPerfil, setShowPerfil] = useState(false);
+  const [students, setStudents] = useState([]);
+  const [transition, setTransition] = useState(false);
 
-  const handleCreateStudent = () => {
-    setShowModal(true);
-  }
+  const handleCreateStudent = (newStudent) => {
+    setStudents([...students, newStudent]); // Agregar el nuevo estudiante a la lista
+    setShowModal(false);
+  };
 
   const handleCloseModal = () => {
     setShowModal(false);
-  }
-  const handleShowPerfil = () => {
-    setShowPerfil(true);
   };
 
-  const handleClosePerfil = () => {
-    setShowPerfil(false);
+  const handleStudentProfileClick = () => {
+    navigate('/perfil-estudiante');
+  };
+
+  const handleDeleteStudent = (index) => {
+    const updatedStudents = students.filter((_, i) => i !== index);
+    setStudents(updatedStudents);
   };
 
   return (
-    <div className="flex flex-col items-center justify-center h-screen">
-      <div className="container mx-auto px-4">
-        <h1 className="text-3xl font-bold text-center mb-8 text-gray-900">Student</h1>
-        
-        <div className="flex flex-col items-center mb-4">
-          <input
-            type="text"
-            placeholder="Buscar estudiante"
-            className="w-full p-2 bg-gray-100 text-gray-900 border border-gray-300 rounded-md focus:ring-[#FEAB5F] focus:border-[#FEAB5F]"
-          />
-        </div>
-        
-        <div className="flex flex-col items-center mb-4">
-          <p className="text-lg font-bold text-gray-900">Número de estudiantes (10)</p>
-        </div>
+    <div className="h-screen bg-gray-100 flex items-center justify-center">
+      <div className="max-w-4xl w-full bg-white rounded-lg shadow-md p-8 border border-gray-200">
+        <h1 className="text-3xl text-center mb-8 text-gray-900">Student</h1>
         
         <div className="flex flex-col items-center mb-4">
           <button
-            className="w-full p-2 bg-[#FEAB5F] text-white font-bold rounded-md hover:bg-[#FE9B3F] transition-colors flex justify-center items-center"
-            onClick={handleCreateStudent}
+            className="w-full p-2 bg-[#FEAB5F] text-black rounded-md transition-colors duration-500 hover:bg-gray-700 hover:text-white"
+            onClick={() => setShowModal(true)}
           >
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
-            </svg>
-            Create New Student
+            <p>+ Create New Student</p>
           </button>
         </div>
         
         {showModal && (
-          <FormularioRegistroEstudiante
-            onClose={handleCloseModal}
-          />
+          <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center z-20">
+            <FormularioRegistroEstudiante onCreate={handleCreateStudent} />
+          </div>
         )}
         
         <div className="flex flex-col items-center mb-4 w-full">
-          <h2 className="text-lg font-bold text-gray-900 mb-2">Estudiantes registrados</h2>
+          <h2 className="text-lg text-gray-900 mb-2">Estudiantes registrados</h2>
           <ul className="list-none p-0 m-0 w-full">
-            <li className="bg-white p-4 rounded-lg shadow-md hover:shadow-sm transition-shadow duration-300 cursor-pointer border border-gray-200 hover:border-[#FEAB5F] mb-2 flex justify-between items-center">
-              <div>
-                <h3 className="text-lg font-bold text-gray-900">John Doe</h3>
-                <p className="text-gray-600">Edad: 20</p>
-              </div>
-              <button className="bg-[#FEAB5F] text-white font-bold py-1 px-3 rounded"onClick={handleShowPerfil}>
-                Student Profile
-              </button>
-              {showPerfil && (
-                    <PerfilEstudiante onClose={handleClosePerfil} />
-                )}
-            </li>
-            <li className="bg-white p-4 rounded-lg shadow-md hover:shadow-sm transition-shadow duration-300 cursor-pointer border border-gray-200 hover:border-[#FEAB5F] mb-2 flex justify-between items-center">
-              <div>
-                <h3 className="text-lg font-bold text-gray-900">Jane Doe</h3>
-                <p className="text-gray-600">Edad: 22</p>
-              </div>
-              <button className="bg-[#FEAB5F] text-white font-bold py-1 px-3 rounded"onClick={handleShowPerfil}>
-                Student Profile
-              </button>
-              
-            </li>
-            <li className="bg-white p-4 rounded-lg shadow-md hover:shadow-sm transition-shadow duration-300 cursor-pointer border border-gray-200 hover:border-[#FEAB5F] mb-2 flex justify-between items-center">
-              <div>
-                <h3 className="text-lg font-bold text-gray-900">Juan Pérez</h3>
-                <p className="text-gray-600">Edad: 25</p>
-              </div>
-              <button className="bg-[#FEAB5F] text-white font-bold py-1 px-3 rounded" onClick={handleShowPerfil}>
+            {students.map((student, index) => (
+              <li key={index} className="bg-white p-4 rounded-lg shadow-md hover:shadow-sm transition-shadow duration-300 cursor-pointer border border-gray-200 hover:border-[#FEAB5F] mb-2 flex justify-between items-center">
+                <div className="flex items-center">
+                  {student.imagen && <img src={student.imagen} alt="Perfil" className="w-16 h-16 object-cover rounded-full mr-4" />}
+                  <div>
+                    <h3 className="text-lg text-gray-900">{student.nombre}</h3>
+                    <p className="text-gray-600">{student.email}</p>
+                  </div>
+                </div>
+                <div className="flex gap-2">
+                  <button className="bg-[#FEAB5F] text-black rounded py-1 px-3 transition-colors duration-300 hover:bg-gray-700 hover:text-white" onClick={handleStudentProfileClick}>
                     Student Profile
-                </button>
-                
-            </li>
+                  </button>
+                  <button className="bg-red-500 hover:bg-red-700 text-white rounded py-1 px-3 transition-colors duration-300 hover:text-black" onClick={() => handleDeleteStudent(index)}>
+                    <Trash size={18} />
+                  </button>
+                </div>
+              </li>
+            ))}
           </ul>
         </div>
+        <button
+          className="bg-gray-500 hover:bg-gray-700 text-white rounded py-2 px-4 transition-colors duration-300 hover:text-black mt-4"
+          onClick={() => navigate('/')}
+        >
+          Regresar a la página de inicio
+        </button>
       </div>
-      <button
-        className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded mt-4"
-        onClick={() => navigate(-1)}
-      >
-        Regresar a la página de inicio
-      </button>
     </div>
-  )
+  );
 }

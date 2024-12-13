@@ -1,12 +1,14 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react';
+import { ActivityContext } from '../context/ActivityContext'; // Importar el contexto
 
 export default function FillInTheBlanksModal({ isOpen, onClose }) {
-  const [task, setTask] = useState('')
-  const [exerciseText, setExerciseText] = useState('')
-  const [parsedExercise, setParsedExercise] = useState([])
+  const { agregarActividad } = useContext(ActivityContext); // Obtener la función para agregar actividad
+  const [task, setTask] = useState('');
+  const [exerciseText, setExerciseText] = useState('');
+  const [parsedExercise, setParsedExercise] = useState([]);
 
   useEffect(() => {
-    const parts = exerciseText.split(/(\[.*?\])/)
+    const parts = exerciseText.split(/(\[.*?\])/);
     setParsedExercise(parts.map((part, index) => {
       if (part.startsWith('[') && part.endsWith(']')) {
         return <input 
@@ -14,18 +16,20 @@ export default function FillInTheBlanksModal({ isOpen, onClose }) {
           type="text" 
           className="border-b border-gray-300 focus:border-[#FEAB5F] outline-none px-1 w-20 inline-block"
           placeholder={part.slice(1, -1)}
-        />
+        />;
       }
-      return <span key={index}>{part}</span>
-    }))
-  }, [exerciseText])
+      return <span key={index}>{part}</span>;
+    }));
+  }, [exerciseText]);
 
   const handleSave = () => {
-    console.log('Guardando:', { task, exerciseText })
-    onClose()
-  }
+    if (task && exerciseText) {
+      agregarActividad({ task, exerciseText }); // Agregar la actividad directamente
+      onClose(); // Cerrar el modal
+    }
+  };
 
-  if (!isOpen) return null
+  if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
@@ -62,20 +66,19 @@ export default function FillInTheBlanksModal({ isOpen, onClose }) {
 
         <div className="flex justify-end space-x-2">
           <button
-            onClick={onClose}
-            className="px-4 py-2 bg-[#FEAB5F] text-white rounded-md hover:bg-[#FE9B3F] transition-colors"
-          >
-            Cancel
-          </button>
-          <button
             onClick={handleSave}
             className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
           >
             Save
           </button>
+          <button
+            onClick={onClose}
+            className="px-4 py-2 bg-[#FEAB5F] text-white rounded-md hover:bg-[#FE9B3F] transition-colors"
+          >
+            Cancel
+          </button>
         </div>
       </div>
     </div>
-  )
+  );
 }
-

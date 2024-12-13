@@ -1,16 +1,26 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react';
+import { ActivityContext } from '../context/ActivityContext'; // Importar el contexto
 
 export default function ImageModal({ isOpen, onClose }) {
-  const [imagenSeleccionada, setImagenSeleccionada] = useState(null)
+  const { agregarActividad } = useContext(ActivityContext); // Obtener la función para agregar actividad
+  const [imagenSeleccionada, setImagenSeleccionada] = useState(null);
+  const [tituloImagen, setTituloImagen] = useState('');
 
   const manejarSeleccionImagen = (event) => {
-    const archivo = event.target.files[0]
+    const archivo = event.target.files[0];
     if (archivo && archivo.type.substr(0, 6) === "image/") {
-      setImagenSeleccionada(URL.createObjectURL(archivo))
+      setImagenSeleccionada(URL.createObjectURL(archivo));
     }
-  }
+  };
 
-  if (!isOpen) return null
+  const manejarGuardar = () => {
+    if (imagenSeleccionada && tituloImagen) {
+      agregarActividad({ nombre: tituloImagen, imagen: imagenSeleccionada }); // Agregar la actividad directamente
+      onClose(); // Cerrar el modal
+    }
+  };
+
+  if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
@@ -24,16 +34,27 @@ export default function ImageModal({ isOpen, onClose }) {
           </button>
         </div>
         <input
-          type="file"
-          accept="image/*"
-          onChange={manejarSeleccionImagen}
-          className="mb-4 w-full text-sm text-gray-500
-            file:mr-4 file:py-2 file:px-4
-            file:rounded-full file:border-0
-            file:text-sm file:font-semibold
-            file:bg-[#FEAB5F] file:text-gray-900
-            hover:file:bg-[#FE9B3F]"
+          type="text"
+          placeholder="Título de la imagen"
+          value={tituloImagen}
+          onChange={(e) => setTituloImagen(e.target.value)}
+          className="mb-4 w-full p-2 border border-gray-300 rounded"
         />
+        <div className="mb-4">
+          <input
+            id="file-input"
+            type="file"
+            accept="image/*"
+            onChange={manejarSeleccionImagen}
+            className="hidden"
+          />
+          <button
+            onClick={() => document.getElementById('file-input').click()}
+            className="w-full py-2 bg-[#FEAB5F] text-gray-900 rounded-md hover:bg-[#FE9B3F] transition-colors"
+          >
+            Elegir archivo
+          </button>
+        </div>
         {imagenSeleccionada && (
           <div className="mt-4">
             <img src={imagenSeleccionada} alt="Vista previa" className="max-w-full h-auto rounded-lg" />
@@ -41,13 +62,19 @@ export default function ImageModal({ isOpen, onClose }) {
         )}
         <div className="mt-4 flex justify-end">
           <button
+            onClick={manejarGuardar}
+            className="px-4 py-2 bg-[#FEAB5F] text-gray-900 rounded-md hover:bg-[#FE9B3F] transition-colors mr-2"
+          >
+            Guardar
+          </button>
+          <button
             onClick={onClose}
-            className="px-4 py-2 bg-[#FEAB5F] text-gray-900 rounded-md hover:bg-[#FE9B3F] transition-colors"
+            className="px-4 py-2 bg-gray-300 text-gray-900 rounded-md hover:bg-gray-400 transition-colors"
           >
             Cerrar
           </button>
         </div>
       </div>
     </div>
-  )
+  );
 }

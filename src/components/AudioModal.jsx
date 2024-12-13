@@ -1,23 +1,27 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react';
+import { ActivityContext } from '../context/ActivityContext'; // Importar el contexto
 
 export default function AudioModal({ isOpen, onClose }) {
-  const [task, setTask] = useState('')
-  const [audioName, setAudioName] = useState('')
-  const [audioFile, setAudioFile] = useState(null)
+  const { agregarActividad } = useContext(ActivityContext); // Obtener la función para agregar actividad
+  const [task, setTask] = useState('');
+  const [audioName, setAudioName] = useState('');
+  const [audioFile, setAudioFile] = useState(null);
 
   const handleAudioUpload = (event) => {
-    const file = event.target.files[0]
+    const file = event.target.files[0];
     if (file && file.type.startsWith('audio/')) {
-      setAudioFile(file)
+      setAudioFile(file);
     }
-  }
+  };
 
   const handleSave = () => {
-    console.log('Guardando:', { task, audioName, audioFile })
-    onClose()
-  }
+    if (audioFile && task && audioName) {
+      agregarActividad({ nombre: audioName, audio: audioFile }); // Agregar la actividad directamente
+      onClose(); // Cerrar el modal
+    }
+  };
 
-  if (!isOpen) return null
+  if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
@@ -88,12 +92,11 @@ export default function AudioModal({ isOpen, onClose }) {
           <button
             onClick={handleSave}
             className="px-4 py-2 bg-[#FEAB5F] text-gray-900 rounded-md hover:bg-[#FE9B3F] transition-colors"
-          >
+            >
             Save
           </button>
         </div>
       </div>
     </div>
-  )
+  );
 }
-

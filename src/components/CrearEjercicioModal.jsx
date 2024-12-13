@@ -1,21 +1,19 @@
 import React, { useState, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { ActivityContext } from '../context/ActivityContext'; // Importar el contexto
+import { ActivityContext } from '../context/ActivityContext';
 import ImageModal from './ImageModal';
 import AudioModal from './AudioModal';
 import FillInTheBlanksModal from './FillTheBlanksModal';
-// import RecordAudioModal from './RecordAudioModal';
+import RecordAudioModal from './RecordAudioModal';
 
 const plantillasEjercicios = [
   { id: 1, nombre: 'Image', descripcion: 'Ejercicios basados en imágenes' },
   { id: 7, nombre: 'Audio', descripcion: 'Ejercicios de comprensión auditiva' },
   { id: 8, nombre: 'Fill in the blanks', descripcion: 'Completar espacios en blanco' },
-  // { id: 9, nombre: 'Record Audio', descripcion: 'Grabar audio para ejercicios de pronunciación' },
+  { id: 9, nombre: 'Record Audio', descripcion: 'Grabar audio para ejercicios de pronunciación' },
 ];
 
-export default function CrearEjercicio() {
-  const navigate = useNavigate();
-  const { setActivities } = useContext(ActivityContext); // Obtener la función para establecer actividades
+const CrearEjercicioModal = ({ isOpen, onClose }) => {
+  const { setActivities } = useContext(ActivityContext);
   const [plantillaSeleccionada, setPlantillaSeleccionada] = useState('');
   const [modalImagenAbierto, setModalImagenAbierto] = useState(false);
   const [modalAudioAbierto, setModalAudioAbierto] = useState(false);
@@ -44,47 +42,31 @@ export default function CrearEjercicio() {
     }
   };
 
-  const agregarActividadImagen = (actividad) => {
+  const agregarActividad = (actividad) => {
     const nuevaActividad = {
-      nombre: actividad.nombre, // Asegúrate de que 'nombre' sea una propiedad válida
-      imagen: actividad.imagen, // Agregar la imagen a la actividad
+      nombre: actividad.nombre,
+      imagen: actividad.imagen,
     };
-    setActivities(prevActivities => [...prevActivities, nuevaActividad]); // Agregar la nueva actividad
+    setActivities(prevActivities => [...prevActivities, nuevaActividad]);
   };
 
-  const agregarActividadAudio = (actividad) => {
-    const nuevaActividad = {
-      nombre: actividad.audioName, // Nombre del audio
-      audio: actividad.audioFile, // Archivo de audio
+  const manejarGuardarActividad = (imagenSeleccionada) => {
+    const actividad = {
+      nombre: 'Nueva Actividad de Imagen',
+      imagen: imagenSeleccionada,
     };
-    setActivities(prevActivities => [...prevActivities, nuevaActividad]); // Agregar la nueva actividad
+    agregarActividad(actividad);
+    cerrarModalImagen();
   };
 
-  const agregarActividadFillInTheBlanks = (actividad) => {
-    const nuevaActividad = {
-      nombre: actividad.task, // Tarea
-      textoEjercicio: actividad.exerciseText, // Texto del ejercicio
-    };
-    setActivities(prevActivities => [...prevActivities, nuevaActividad]); // Agregar la nueva actividad
-  };
-
-  const agregarActividadRecordAudio = (actividad) => {
-    const nuevaActividad = {
-      nombre: actividad.taskName, // Nombre de la tarea
-      descripcion: actividad.description, // Descripción
-      duracion: actividad.duration, // Duración
-      audio: actividad.audioBlob, // Blob de audio grabado
-    };
-    setActivities(prevActivities => [...prevActivities, nuevaActividad]); // Agregar la nueva actividad
-  };
+  if (!isOpen) return null;
 
   return (
-    <div className="min-h-screen bg-white text-gray-900 flex flex-col items-center justify-center h-screen">
-      <div className="container mx-auto px-4">
-        <h1 className="text-3xl font-bold text-center mb-8 text-gray-900">Create New Exercise</h1>
-
+    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+      <div className="bg-white p-6 rounded-lg shadow-lg w-1/2">
+        <h1 className="text-3xl font-bold mb-4">Create New Exercise</h1>
         <div className="mb-6">
-          <label htmlFor=" exercise-template" className="block text-sm font-medium mb-2 text-gray-700">
+          <label htmlFor="exercise-template" className="block text-sm font-medium mb-2 text-gray-700">
             Exercise Template
           </label>
           <select
@@ -114,19 +96,21 @@ export default function CrearEjercicio() {
             </div>
           ))}
         </div>
+
+        <ImageModal isOpen={modalImagenAbierto} onClose={cerrarModalImagen} onSave={manejarGuardarActividad} />
+        <AudioModal isOpen={modalAudioAbierto} onClose={cerrarModalAudio} />
+        <FillInTheBlanksModal isOpen={modalFillInTheBlanksAbierto} onClose={cerrarModalFillInTheBlanks} />
+        <RecordAudioModal isOpen={modalRecordAudioAbierto} onClose={cerrarModalRecordAudio} />
+
+        <button
+          className="mt-4 bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded"
+          onClick={onClose}
+        >
+          Cerrar
+        </button>
       </div>
-
-      <ImageModal isOpen={modalImagenAbierto} onClose={cerrarModalImagen} onSave={agregarActividadImagen} />
-      <AudioModal isOpen={modalAudioAbierto} onClose={cerrarModalAudio} onSave={agregarActividadAudio} />
-      <FillInTheBlanksModal isOpen={modalFillInTheBlanksAbierto} onClose={cerrarModalFillInTheBlanks} onSave={agregarActividadFillInTheBlanks} />
-      <RecordAudioModal isOpen={modalRecordAudioAbierto} onClose={cerrarModalRecordAudio} onSave={agregarActividadRecordAudio} />
-
-      <button
-        className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded mt-4"
-        onClick={() => navigate('/')}
-      >
-        Regresar a la página de inicio
-      </button>
     </div>
   );
-}
+};
+
+export default CrearEjercicioModal;
